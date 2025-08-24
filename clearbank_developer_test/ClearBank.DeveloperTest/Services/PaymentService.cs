@@ -9,17 +9,14 @@ namespace ClearBank.DeveloperTest.Services
         private readonly IAccountService _accountService;
         private readonly IPaymentCalculationService _paymentCalculationService;
         private readonly IPaymentSchemeService _paymentSchemeService;
-        private readonly ILogger<PaymentService> _logger;
 
         public PaymentService(IAccountService accountService,
             IPaymentCalculationService paymentCalculationService,
-            IPaymentSchemeService paymentSchemeService,
-            ILogger<PaymentService> logger)
+            IPaymentSchemeService paymentSchemeService)
         {
             _accountService = accountService;
             _paymentCalculationService = paymentCalculationService;
             _paymentSchemeService = paymentSchemeService;
-            _logger = logger;
         }
         public MakePaymentResult MakePayment(MakePaymentRequest request)
         {

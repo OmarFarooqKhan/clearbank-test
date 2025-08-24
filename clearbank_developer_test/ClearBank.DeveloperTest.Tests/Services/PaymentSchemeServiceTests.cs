@@ -1,7 +1,9 @@
 using AutoFixture;
 using ClearBank.DeveloperTest.Services;
+using ClearBank.DeveloperTest.Services.Interfaces;
 using ClearBank.DeveloperTest.Types;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace ClearBank.DeveloperTest.Tests.Services;
@@ -9,9 +11,17 @@ namespace ClearBank.DeveloperTest.Tests.Services;
 public class PaymentSchemeServiceTests
 {
     private readonly PaymentService _sut;
+    private readonly Mock<IAccountService> _accountServiceMock;
+    private readonly Mock<IPaymentCalculationService> _paymentCalculationService;
+    private readonly Mock<IPaymentSchemeService> _paymentSchemeService;
+    
     public PaymentSchemeServiceTests()
     {
-        _sut = new PaymentService();
+        _accountServiceMock = new();
+        _paymentCalculationService = new();
+        _paymentSchemeService = new();
+        
+        _sut = new PaymentService(_accountServiceMock.Object, _paymentCalculationService.Object, _paymentSchemeService.Object);
     }
 
     [Fact]
