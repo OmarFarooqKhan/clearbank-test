@@ -1,4 +1,4 @@
-namespace ClearBank.DeveloperTest.Factories;
+namespace ClearBank.DeveloperTest.Data.Factories;
 
 public class AccountDataStoreFactoryOptions(string dataStoreType)
 {

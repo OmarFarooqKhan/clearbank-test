@@ -1,8 +1,8 @@
 using ClearBank.DeveloperTest.Data;
+using ClearBank.DeveloperTest.Data.Factories;
+using ClearBank.DeveloperTest.Data.Factories.Interfaces;
 using ClearBank.DeveloperTest.Data.Interfaces;
-using ClearBank.DeveloperTest.Factories;
-using ClearBank.DeveloperTest.Factories.Interfaces;
-using ClearBank.DeveloperTest.Proxies;
+using ClearBank.DeveloperTest.Data.Proxies;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

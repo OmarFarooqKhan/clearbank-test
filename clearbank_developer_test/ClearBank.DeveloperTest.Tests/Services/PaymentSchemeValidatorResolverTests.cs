@@ -22,7 +22,7 @@ public class PaymentSchemeValidatorResolverTests
     public void Given_PaymentSchemeValidatorResolver_When_ValidPaymentSchemeSelected_Then_CorrectValidatorChosen(PaymentScheme paymentScheme, Type validatorType)
     {
         var result = _sut.RetrievePaymentSchemeValidator(paymentScheme);
-        
+
         result.Should().BeOfType(validatorType);
     }
 

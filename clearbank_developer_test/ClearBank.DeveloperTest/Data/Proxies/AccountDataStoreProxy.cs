@@ -1,8 +1,8 @@
 using ClearBank.DeveloperTest.Data.Interfaces;
-using ClearBank.DeveloperTest.Factories.Interfaces;
+using ClearBank.DeveloperTest.Data.Factories.Interfaces;
 using ClearBank.DeveloperTest.Types;
 
-namespace ClearBank.DeveloperTest.Proxies;
+namespace ClearBank.DeveloperTest.Data.Proxies;
 
 public class AccountDataStoreProxy : IAccountDataStore
 {

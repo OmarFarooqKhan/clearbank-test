@@ -46,7 +46,6 @@ public class PaymentSchemeService : IPaymentSchemeService
                 log
             );
             return isValidPaymentScheme;
-
         }
         catch (ArgumentOutOfRangeException ex)
         {

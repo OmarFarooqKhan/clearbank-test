@@ -18,7 +18,7 @@ public class AccountValidatorTests
     public void Given_AccountValidator_WhenAccountIsPopulated_Then_ReturnTrue()
     {
         var result = _sut.IsValidAccount(new Account());
-        
+
         result.Should().BeTrue();
     }
 
@@ -26,7 +26,7 @@ public class AccountValidatorTests
     public void Given_AccountValidator_WhenNoAccountIsProvided_Then_ReturnFalse()
     {
         var result = _sut.IsValidAccount(null);
-        
+
         result.Should().BeFalse();
     }
 }

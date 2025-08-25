@@ -1,13 +1,13 @@
 using System;
+using ClearBank.DeveloperTest.Data.Factories.Interfaces;
 using ClearBank.DeveloperTest.Data.Interfaces;
-using ClearBank.DeveloperTest.Factories.Interfaces;
-using ClearBank.DeveloperTest.Proxies;
+using ClearBank.DeveloperTest.Data.Proxies;
 using ClearBank.DeveloperTest.Types;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace ClearBank.DeveloperTest.Tests.Proxies;
+namespace ClearBank.DeveloperTest.Tests.Data.Proxies;
 
 public class AccountDataStoreProxyTests
 {
@@ -40,7 +40,7 @@ public class AccountDataStoreProxyTests
         var accountToUpdate = new Account();
 
         _sut.UpdateAccount(accountToUpdate);
-        
+
         _mockDataStore.Verify(mock => mock.UpdateAccount(accountToUpdate), Times.Once);
     }
 }

@@ -1,11 +1,8 @@
-using System.Collections.Generic;
-using System.Linq;
-using ClearBank.DeveloperTest.Data;
+using ClearBank.DeveloperTest.Data.Factories.Interfaces;
 using ClearBank.DeveloperTest.Data.Interfaces;
-using ClearBank.DeveloperTest.Factories.Interfaces;
 using Microsoft.Extensions.Options;
 
-namespace ClearBank.DeveloperTest.Factories;
+namespace ClearBank.DeveloperTest.Data.Factories;
 
 public class AccountDataStoreFactory : IAccountDataStoreFactory
 {

@@ -53,7 +53,7 @@ public class PaymentServiceTests
             .Returns(false);
 
         var outcome = _sut.MakePayment(request);
-        
+
         _paymentCalculationServiceMock.VerifyNoOtherCalls();
         outcome.Success.Should().BeFalse();
     }

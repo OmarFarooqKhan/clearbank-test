@@ -23,7 +23,7 @@ public class PaymentCalculationServiceTests
     public void Given_PaymentCalculationService_When_DeductionToBeMade_ThenDeductionIsProcessed(Account account, decimal amountToDeduct)
     {
         _sut.ProcessDeductions(account, amountToDeduct);
-        
+
         _mockAccountService.Verify(mock => mock.UpdateAccount(account), Times.Once);
     }
 }
