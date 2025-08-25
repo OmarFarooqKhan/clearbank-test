@@ -2,7 +2,7 @@
 
 ## Things to refactor
 
-- `PaymentService` utilises `AppSettings` to decide on what Database to use. That responsibility shouldnt be down to the `PaymentService`. Also with AppSettings being used it implies it can be changed without restarting the application.
+- `PaymentService` utilises `AppSettings` to decide on what Database to use. That responsibility shouldnt be down to the `PaymentService`. Also with `AppSettings` being used it implies it can be changed without restarting the application.
 
 - Switch case for PaymentSchemes would need to be split and each of the PaymentSchemes logic should be encased in their own validator class.
 
