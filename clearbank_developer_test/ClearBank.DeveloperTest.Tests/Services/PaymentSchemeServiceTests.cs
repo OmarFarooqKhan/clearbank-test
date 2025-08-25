@@ -1,4 +1,4 @@
-using AutoFixture;
+using AutoFixture.Xunit2;
 using ClearBank.DeveloperTest.Services;
 using ClearBank.DeveloperTest.Services.Interfaces;
 using ClearBank.DeveloperTest.Types;
@@ -12,36 +12,49 @@ public class PaymentSchemeServiceTests
 {
     private readonly PaymentService _sut;
     private readonly Mock<IAccountService> _accountServiceMock;
-    private readonly Mock<IPaymentCalculationService> _paymentCalculationService;
-    private readonly Mock<IPaymentSchemeService> _paymentSchemeService;
+    private readonly Mock<IPaymentCalculationService> _paymentCalculationServiceMock;
+    private readonly Mock<IPaymentSchemeService> _paymentSchemeServiceMock;
     
     public PaymentSchemeServiceTests()
     {
         _accountServiceMock = new();
-        _paymentCalculationService = new();
-        _paymentSchemeService = new();
+        _paymentCalculationServiceMock = new();
+        _paymentSchemeServiceMock = new();
         
-        _sut = new PaymentService(_accountServiceMock.Object, _paymentCalculationService.Object, _paymentSchemeService.Object);
+        _sut = new PaymentService(_accountServiceMock.Object, _paymentCalculationServiceMock.Object, _paymentSchemeServiceMock.Object);
     }
 
-    [Fact]
-    public void Given_MakePaymentIsCalledWithAppSettings_Then_CorrectDataStoreRetrieved()
+    [Theory]
+    [AutoData]
+    public void Given_MakePaymentIsCalled_When_PaymentSchemeValidates_MakePaymentResultIsSuccessful(MakePaymentRequest request)
     {
-        
+        var accountRetrieved = new Account();
+        _accountServiceMock
+            .Setup(mock => mock.RetrieveAccount(request.DebtorAccountNumber))
+            .Returns(accountRetrieved);
+        _paymentSchemeServiceMock.Setup(mock => mock.IsSuccessfulPayment(request, accountRetrieved))
+            .Returns(true);
+
+       var outcome =  _sut.MakePayment(request);
+       
+       _paymentCalculationServiceMock.Verify(calls => calls.ProcessDeductions(accountRetrieved, request.Amount), Times.Once);
+       outcome.Success.Should().BeTrue();
     }
 
-    [Fact]
-    [InlineData(PaymentScheme.Bacs)]
-    [InlineData(PaymentScheme.Chaps)]
-    [InlineData(PaymentScheme.FasterPayments)]
-    public void Given_MakePaymentIsCalled_When_AccountAndRequestPopulatedWithValidScheme_Then_MakePaymentResultIsSuccessful(PaymentScheme paymentScheme)
+    [Theory]
+    [AutoData]
+    public void Given_MakePaymentIsCalled_When_UnsuccessfulPaymentSchemeValidation_Then_MakePaymentResultUnsuccessful(MakePaymentRequest request)
     {
-    }
+        var accountRetrieved = new Account();
+        _accountServiceMock
+            .Setup(mock => mock.RetrieveAccount(request.DebtorAccountNumber))
+            .Returns(accountRetrieved);
+        _paymentSchemeServiceMock.Setup(mock => mock.IsSuccessfulPayment(request, accountRetrieved))
+            .Returns(false);
 
-    [Fact]
-    public void Given_MakePaymentIsCalled_When_AccountIsInvalid_Then_MakePaymentResultUnsuccessful()
-    {
-        
+        var outcome =  _sut.MakePayment(request);
+        _paymentCalculationServiceMock.VerifyNoOtherCalls();
+        outcome.Success.Should().BeFalse();
     }
 
     [Fact]
