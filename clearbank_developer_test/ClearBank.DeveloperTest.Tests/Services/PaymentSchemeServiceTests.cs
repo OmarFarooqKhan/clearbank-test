@@ -1,3 +1,4 @@
+using System;
 using AutoFixture.Xunit2;
 using ClearBank.DeveloperTest.Logging;
 using ClearBank.DeveloperTest.Services;
@@ -79,5 +80,24 @@ public class PaymentSchemeServiceTests
         _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Warning);
         _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_InvalidAccount {request.DebtorAccountNumber}");
 
+    }
+    
+    [Theory]
+    [AutoData]
+    public void Given_PaymentSchemeService_When_PaymentSchemeResolverThrows_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
+    {
+        var ex = new ArgumentOutOfRangeException();
+        _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(true);
+        _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
+            .Throws(ex);
+        
+
+        var result = _sut.IsSuccessfulPayment(request, account);
+
+        result.Should().BeFalse();
+        _mockLogger.Collector.Count.Should().Be(1);
+        _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Error);
+        _mockLogger.LatestRecord.Message.Should().Be("PaymentSchemeResolver_UnknownScheme");
+        _mockLogger.LatestRecord.Exception.Should().Be(ex);
     }
 }
