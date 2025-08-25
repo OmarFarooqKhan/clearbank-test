@@ -31,15 +31,15 @@ public class PaymentSchemeServiceTests
 
     [Theory]
     [AutoData]
-    public void Given_PaymentSchemeService_When_PaymentAndAccountAreValid_Then_IsSuccessfulPaymentReturnsTrue(MakePaymentRequest request, Account account)
+    public void Given_PaymentSchemeService_When_PaymentAndAccountAreValid_Then_IsValidPaymentSchemeReturnsTrue(MakePaymentRequest request, Account account)
     {
         _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(true);
         var mockValidator = new Mock<IPaymentSchemeValidator>();
-        mockValidator.Setup(mock => mock.IsValidPaymentScheme(request, account)).Returns(true);
+        mockValidator.Setup(mock => mock.IsValid(request, account)).Returns(true);
         _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
             .Returns(mockValidator.Object);
 
-        var result = _sut.IsSuccessfulPayment(request, account);
+        var result = _sut.IsValidPaymentScheme(request, account);
 
         result.Should().BeTrue();
         var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, true);
@@ -50,15 +50,15 @@ public class PaymentSchemeServiceTests
 
     [Theory]
     [AutoData]
-    public void Given_PaymentSchemeService_When_AccountIsValidButPaymentSchemeIsNot_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
+    public void Given_PaymentSchemeService_When_AccountIsValidButPaymentSchemeIsNot_Then_IsValidPaymentSchemeReturnsFalse(MakePaymentRequest request, Account account)
     {
         _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(true);
         var mockValidator = new Mock<IPaymentSchemeValidator>();
-        mockValidator.Setup(mock => mock.IsValidPaymentScheme(request, account)).Returns(false);
+        mockValidator.Setup(mock => mock.IsValid(request, account)).Returns(false);
         _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
             .Returns(mockValidator.Object);
 
-        var result = _sut.IsSuccessfulPayment(request, account);
+        var result = _sut.IsValidPaymentScheme(request, account);
 
         result.Should().BeFalse();
         var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, false);
@@ -69,11 +69,11 @@ public class PaymentSchemeServiceTests
 
     [Theory]
     [AutoData]
-    public void Given_PaymentSchemeService_When_AccountIsInvalid_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
+    public void Given_PaymentSchemeService_When_AccountIsInvalid_Then_IsValidPaymentSchemeReturnsFalse(MakePaymentRequest request, Account account)
     {
         _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(false);
 
-        var result = _sut.IsSuccessfulPayment(request, account);
+        var result = _sut.IsValidPaymentScheme(request, account);
 
         result.Should().BeFalse();
         _mockLogger.Collector.Count.Should().Be(1);
@@ -84,14 +84,14 @@ public class PaymentSchemeServiceTests
 
     [Theory]
     [AutoData]
-    public void Given_PaymentSchemeService_When_PaymentSchemeResolverThrows_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
+    public void Given_PaymentSchemeService_When_PaymentSchemeResolverThrows_Then_IsValidPaymentSchemeReturnsFalse(MakePaymentRequest request, Account account)
     {
         var ex = new ArgumentOutOfRangeException();
         _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(true);
         _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
             .Throws(ex);
 
-        var result = _sut.IsSuccessfulPayment(request, account);
+        var result = _sut.IsValidPaymentScheme(request, account);
 
         result.Should().BeFalse();
         _mockLogger.Collector.Count.Should().Be(1);

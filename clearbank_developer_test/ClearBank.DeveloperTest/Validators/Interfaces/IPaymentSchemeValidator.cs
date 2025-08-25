@@ -10,5 +10,5 @@ public interface IPaymentSchemeValidator
     /// <param name="request"></param>
     /// <param name="account"></param>
     /// <returns>Whether the PaymentScheme is valid or not</returns>
-    public bool IsValidPaymentScheme(MakePaymentRequest request, Account account);
+    public bool IsValid(MakePaymentRequest request, Account account);
 }

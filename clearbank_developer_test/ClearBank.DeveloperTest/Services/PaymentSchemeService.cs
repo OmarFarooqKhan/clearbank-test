@@ -22,7 +22,7 @@ public class PaymentSchemeService : IPaymentSchemeService
         _accountValidator = accountValidator;
         _logger = logger;
     }
-    public bool IsSuccessfulPayment(MakePaymentRequest request, Account account)
+    public bool IsValidPaymentScheme(MakePaymentRequest request, Account account)
     {
         try
         {
@@ -37,7 +37,7 @@ public class PaymentSchemeService : IPaymentSchemeService
             }
 
             var paymentScheme = _paymentSchemeValidatorResolver.RetrievePaymentSchemeValidator(request.PaymentScheme);
-            var isValidPaymentScheme = paymentScheme.IsValidPaymentScheme(request, account);
+            var isValidPaymentScheme = paymentScheme.IsValid(request, account);
             var log = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, isValidPaymentScheme);
 
             _logger.LogInformation(

@@ -32,7 +32,7 @@ public class PaymentServiceTests
         _accountServiceMock
             .Setup(mock => mock.RetrieveAccount(request.DebtorAccountNumber))
             .Returns(accountRetrieved);
-        _paymentSchemeServiceMock.Setup(mock => mock.IsSuccessfulPayment(request, accountRetrieved))
+        _paymentSchemeServiceMock.Setup(mock => mock.IsValidPaymentScheme(request, accountRetrieved))
             .Returns(true);
 
         var outcome = _sut.MakePayment(request);
@@ -49,7 +49,7 @@ public class PaymentServiceTests
         _accountServiceMock
             .Setup(mock => mock.RetrieveAccount(request.DebtorAccountNumber))
             .Returns(accountRetrieved);
-        _paymentSchemeServiceMock.Setup(mock => mock.IsSuccessfulPayment(request, accountRetrieved))
+        _paymentSchemeServiceMock.Setup(mock => mock.IsValidPaymentScheme(request, accountRetrieved))
             .Returns(false);
 
         var outcome = _sut.MakePayment(request);

@@ -4,5 +4,5 @@ namespace ClearBank.DeveloperTest.Services.Interfaces;
 
 public interface IPaymentSchemeService
 {
-    bool IsSuccessfulPayment(MakePaymentRequest request, Account account);
+    bool IsValidPaymentScheme(MakePaymentRequest request, Account account);
 }

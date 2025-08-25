@@ -26,7 +26,7 @@ public class ChapsValidatorTests
             Balance = 0_001M
         };
 
-        var result = _sut.IsValidPaymentScheme(request, validAccount);
+        var result = _sut.IsValid(request, validAccount);
 
         result.Should().BeTrue();
     }
@@ -46,7 +46,7 @@ public class ChapsValidatorTests
 
         var request = new MakePaymentRequest();
 
-        var result = _sut.IsValidPaymentScheme(request, validAccount);
+        var result = _sut.IsValid(request, validAccount);
         result.Should().BeTrue();
     }
 
@@ -64,8 +64,27 @@ public class ChapsValidatorTests
         };
         var request = new MakePaymentRequest();
 
-        var result = _sut.IsValidPaymentScheme(request, validAccount);
+        var result = _sut.IsValid(request, validAccount);
 
         result.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(AllowedPaymentSchemes.Bacs, AccountStatus.Disabled)]
+    [InlineData(AllowedPaymentSchemes.FasterPayments, AccountStatus.InboundPaymentsOnly)]
+    public void Given_ChapsValidator_When_NoConditionMet_Then_ReturnFalse(AllowedPaymentSchemes paymentSchemes, AccountStatus invalidStatus)
+    {
+        var validAccount = new Account
+        {
+            AllowedPaymentSchemes = paymentSchemes,
+            Status = invalidStatus,
+            AccountNumber = "genuine-account-number",
+            Balance = 0_001M
+        };
+        var request = new MakePaymentRequest();
+
+        var result = _sut.IsValid(request, validAccount);
+
+        result.Should().BeFalse();
     }
 }
