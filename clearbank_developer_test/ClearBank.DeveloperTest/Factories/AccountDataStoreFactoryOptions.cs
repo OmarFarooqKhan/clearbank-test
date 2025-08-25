@@ -1,3 +1,6 @@
 namespace ClearBank.DeveloperTest.Factories;
 
-public record AccountDataStoreFactoryOptions(string DataStoreType);
+public class AccountDataStoreFactoryOptions(string dataStoreType)
+{
+    public string DataStoreType { get; set; } = dataStoreType;
+}
