@@ -40,6 +40,7 @@ public class AccountDataStoreProxyTests
         var accountToUpdate = new Account();
 
         _sut.UpdateAccount(accountToUpdate);
+        
         _mockDataStore.Verify(mock => mock.UpdateAccount(accountToUpdate), Times.Once);
     }
 }

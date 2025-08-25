@@ -30,6 +30,7 @@ public class AccountDataStoreFactoryTests
     public void Given_AccountDataStoreFactory_When_CreateAndDataStoreTypeIsNotBackup_ThenAccountDataStoreReturned()
     {
         _mockOptions.SetupGet(mock => mock.CurrentValue).Returns(new AccountDataStoreFactoryOptions("Something"));
+        
         var result = _sut.Create();
 
         result.Should().Be(_mockAccountDataStore.Object);
@@ -38,6 +39,7 @@ public class AccountDataStoreFactoryTests
     public void Given_AccountDataStoreFactory_When_CreateAndDataStoreTypeIsBackup_ThenBackupAccountDataStoreReturned()
     {
         _mockOptions.SetupGet(mock => mock.CurrentValue).Returns(new AccountDataStoreFactoryOptions(Backup));
+        
         var result = _sut.Create();
 
         result.Should().Be(_mockBackupAccountDataStore.Object);
