@@ -7,6 +7,6 @@ public class AccountValidator : IAccountValidator
 {
     public bool IsValidAccount(Account account)
     {
-        return account is null;
+        return account is not null;
     }
 }

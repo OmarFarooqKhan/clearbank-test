@@ -22,7 +22,7 @@ public class AccountDataStoreFactoryTests
         _mockOptions = new();
 
         _sut = new AccountDataStoreFactory(
-            [_mockAccountDataStore.Object, _mockBackupAccountDataStore.Object],
+            _mockAccountDataStore.Object, _mockBackupAccountDataStore.Object,
             _mockOptions.Object);
     }
 

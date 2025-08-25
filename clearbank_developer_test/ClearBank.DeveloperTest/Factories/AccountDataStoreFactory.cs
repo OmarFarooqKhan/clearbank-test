@@ -14,12 +14,12 @@ public class AccountDataStoreFactory : IAccountDataStoreFactory
     private readonly IOptionsMonitor<AccountDataStoreFactoryOptions> _optionsMonitor;
     private const string BackupAccount = "Backup";
 
-    public AccountDataStoreFactory(IEnumerable<IAccountDataStore> accountDataStores,
+    public AccountDataStoreFactory(AccountDataStore accountDataStore,
+        BackupAccountDataStore backupAccountDataStore,
         IOptionsMonitor<AccountDataStoreFactoryOptions> optionsMonitor)
     {
-        var dataStores = accountDataStores.ToList();
-        _accountDataStore = dataStores.OfType<AccountDataStore>().Single();
-        _backupAccountDataStore = dataStores.OfType<BackupAccountDataStore>().Single();
+        _accountDataStore = accountDataStore;
+        _backupAccountDataStore = backupAccountDataStore;
         _optionsMonitor = optionsMonitor;
     }
 

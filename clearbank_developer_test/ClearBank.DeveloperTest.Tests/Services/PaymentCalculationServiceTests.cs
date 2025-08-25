@@ -1,5 +1,6 @@
 using AutoFixture.Xunit2;
 using ClearBank.DeveloperTest.Services;
+using ClearBank.DeveloperTest.Services.Interfaces;
 using ClearBank.DeveloperTest.Types;
 using Moq;
 using Xunit;
@@ -8,7 +9,7 @@ namespace ClearBank.DeveloperTest.Tests.Services;
 
 public class PaymentCalculationServiceTests
 {
-    private readonly Mock<AccountService> _mockAccountService;
+    private readonly Mock<IAccountService> _mockAccountService;
     private readonly PaymentCalculationService _sut;
 
     public PaymentCalculationServiceTests()

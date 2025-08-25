@@ -16,8 +16,8 @@ public static class ServiceCollectionExtensions
         serviceCollection.Configure<AccountDataStoreFactoryOptions>(
             configuration.GetSection("AccountDataStoreFactoryOptions"));
 
-        serviceCollection.AddSingleton<IAccountDataStore, AccountDataStore>();
-        serviceCollection.AddSingleton<IAccountDataStore, BackupAccountDataStore>();
+        serviceCollection.AddSingleton<AccountDataStore>();
+        serviceCollection.AddSingleton<BackupAccountDataStore>();
         serviceCollection.AddSingleton<IAccountDataStore, AccountDataStoreProxy>();
         serviceCollection.AddSingleton<IAccountDataStoreFactory, AccountDataStoreFactory>();
 
