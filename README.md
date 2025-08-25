@@ -69,6 +69,6 @@
 - I would have looked into configuration around the appSettings to enable things like `ValidateOnStart` so that if AppSettings do change and the OptionsConfiguration is not correct, then the build will fail.
 - I would have also liked to add more logging around DB Selection in case app settings do change so we can get confirmation via logging when the switch over happens.
 - For testing I would have liked to get 100% coverage.
-- Would have also like to have used Fluent validation for PaymentSchemeValidators with a log to understand what was a cause of the validation faliure.S
+- Would have also like to have used Fluent validation for PaymentSchemeValidators with a log to understand what was a cause of the validation faliure.
 
 Thank you so much for reading through my changes and I hope they give you an understanding of my though process when it comes to problem solving 😊
