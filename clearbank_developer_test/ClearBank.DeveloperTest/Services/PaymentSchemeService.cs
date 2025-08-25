@@ -48,7 +48,7 @@ public class PaymentSchemeService : IPaymentSchemeService
             return isValidPaymentScheme;
 
         }
-        catch(ArgumentOutOfRangeException ex)
+        catch (ArgumentOutOfRangeException ex)
         {
             _logger.LogError(ex, LogEventNames.PaymentSchemeServiceUnknownScheme);
         }

@@ -18,13 +18,13 @@ public class PaymentSchemeServiceTests
     private readonly Mock<IPaymentSchemeValidatorResolver> _mockResolver;
     private readonly Mock<IAccountValidator> _mockAccountValidator;
     private readonly FakeLogger<PaymentSchemeService> _mockLogger;
-    
+
     public PaymentSchemeServiceTests()
     {
         _mockResolver = new();
         _mockAccountValidator = new();
         _mockLogger = new();
-        
+
         _sut = new PaymentSchemeService(_mockResolver.Object, _mockAccountValidator.Object, _mockLogger);
     }
 
@@ -37,16 +37,16 @@ public class PaymentSchemeServiceTests
         mockValidator.Setup(mock => mock.IsValidPaymentScheme(request, account)).Returns(true);
         _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
             .Returns(mockValidator.Object);
-        
-       var result =  _sut.IsSuccessfulPayment(request, account);
-       
-       result.Should().BeTrue();
-       var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, true );
-       _mockLogger.Collector.Count.Should().Be(1);
-       _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Information);
-       _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_Outcome {expectedLogOutcome}");
+
+        var result = _sut.IsSuccessfulPayment(request, account);
+
+        result.Should().BeTrue();
+        var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, true);
+        _mockLogger.Collector.Count.Should().Be(1);
+        _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Information);
+        _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_Outcome {expectedLogOutcome}");
     }
-    
+
     [Theory]
     [AutoData]
     public void Given_PaymentSchemeService_When_AccountIsValidButPaymentSchemeIsNot_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
@@ -56,11 +56,11 @@ public class PaymentSchemeServiceTests
         mockValidator.Setup(mock => mock.IsValidPaymentScheme(request, account)).Returns(false);
         _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
             .Returns(mockValidator.Object);
-        
-        var result =  _sut.IsSuccessfulPayment(request, account);
-       
+
+        var result = _sut.IsSuccessfulPayment(request, account);
+
         result.Should().BeFalse();
-        var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, false );
+        var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, false);
         _mockLogger.Collector.Count.Should().Be(1);
         _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Information);
         _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_Outcome {expectedLogOutcome}");
@@ -71,9 +71,9 @@ public class PaymentSchemeServiceTests
     public void Given_PaymentSchemeService_When_AccountIsInvalid_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
     {
         _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(false);
-        
-        var result =  _sut.IsSuccessfulPayment(request, account);
-        
+
+        var result = _sut.IsSuccessfulPayment(request, account);
+
         result.Should().BeFalse();
         _mockLogger.Collector.Count.Should().Be(1);
         _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Warning);

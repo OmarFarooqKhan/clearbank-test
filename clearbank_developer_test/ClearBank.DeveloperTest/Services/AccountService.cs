@@ -10,7 +10,7 @@ public class AccountService : IAccountService
 {
     private readonly IAccountDataStore _accountDataStore;
     private readonly ILogger<AccountService> _logger;
-    
+
     public AccountService(IAccountDataStore accountDataStore, ILogger<AccountService> logger)
     {
         _accountDataStore = accountDataStore;
@@ -19,16 +19,16 @@ public class AccountService : IAccountService
     public Account RetrieveAccount(string accountNumber)
     {
         var account = _accountDataStore.GetAccount(accountNumber);
-        
+
         if (account is not null)
-        { 
-            _logger.LogInformation("{EventName} {AccountNumber}", 
+        {
+            _logger.LogInformation("{EventName} {AccountNumber}",
                 LogEventNames.AccountServiceSuccess,
                 accountNumber);
-             return account;
+            return account;
         }
-        
-        _logger.LogWarning("{EventName} {AccountNumber}", 
+
+        _logger.LogWarning("{EventName} {AccountNumber}",
             LogEventNames.AccountServiceUnableToFindAccount,
             accountNumber);
         return null;
@@ -38,7 +38,7 @@ public class AccountService : IAccountService
     {
         _logger.LogInformation("{EventName} {AccountNumber}", LogEventNames.AccountServiceUpdatingAccount,
             account.AccountNumber);
-        
+
         _accountDataStore.UpdateAccount(account);
     }
 }

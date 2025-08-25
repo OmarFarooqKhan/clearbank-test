@@ -20,8 +20,8 @@ public class PaymentSchemeValidatorResolverTests
     [InlineData(PaymentScheme.Chaps, typeof(ChapsValidator))]
     [InlineData(PaymentScheme.FasterPayments, typeof(FasterPaymentsValidator))]
     public void Given_PaymentSchemeValidatorResolver_When_ValidPaymentSchemeSelected_Then_CorrectValidatorChosen(PaymentScheme paymentScheme, Type validatorType)
-    { 
-        var result =  _sut.RetrievePaymentSchemeValidator(paymentScheme);
+    {
+        var result = _sut.RetrievePaymentSchemeValidator(paymentScheme);
         result.Should().BeOfType(validatorType);
     }
 
@@ -29,7 +29,7 @@ public class PaymentSchemeValidatorResolverTests
     public void Given_PaymentSchemeValidatorResolver_When_InvalidPaymentSchemeSelected_Then_ArgExceptionRaised()
     {
         var unknownPaymentScheme = (PaymentScheme)int.MaxValue;
-        
+
         Action act = () => _sut.RetrievePaymentSchemeValidator(unknownPaymentScheme);
 
         act.Should().Throw<ArgumentOutOfRangeException>();

@@ -25,12 +25,12 @@ public class ChapsValidatorTests
             AccountNumber = "genuine-account-number",
             Balance = 0_001M
         };
-        
+
         var result = _sut.IsValidPaymentScheme(request, validAccount);
-        
+
         result.Should().BeTrue();
     }
-    
+
     [Theory]
     [InlineData(AccountStatus.InboundPaymentsOnly)]
     [InlineData(AccountStatus.Disabled)]
@@ -43,13 +43,13 @@ public class ChapsValidatorTests
             AccountNumber = "genuine-account-number",
             Balance = 0_001M
         };
-        
+
         var request = new MakePaymentRequest();
-        
+
         var result = _sut.IsValidPaymentScheme(request, validAccount);
         result.Should().BeTrue();
     }
-    
+
     [Theory]
     [InlineData(AllowedPaymentSchemes.Bacs)]
     [InlineData(AllowedPaymentSchemes.FasterPayments)]
@@ -63,9 +63,9 @@ public class ChapsValidatorTests
             Balance = 0_001M
         };
         var request = new MakePaymentRequest();
-        
+
         var result = _sut.IsValidPaymentScheme(request, validAccount);
-        
+
         result.Should().BeTrue();
     }
 }

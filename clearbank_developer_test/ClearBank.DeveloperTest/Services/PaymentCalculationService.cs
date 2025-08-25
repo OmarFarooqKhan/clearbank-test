@@ -9,5 +9,5 @@ public class PaymentCalculationService(IAccountService accountService) : IPaymen
     {
         account.Balance -= amountToDeduct;
         accountService.UpdateAccount(account);
-     }
+    }
 }

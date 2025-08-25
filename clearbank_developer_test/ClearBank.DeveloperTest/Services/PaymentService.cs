@@ -19,11 +19,11 @@ namespace ClearBank.DeveloperTest.Services
         }
         public MakePaymentResult MakePayment(MakePaymentRequest request)
         {
-           var account = _accountService.RetrieveAccount(request.DebtorAccountNumber);
-           var isSuccessfulPayment = _paymentSchemeService.IsSuccessfulPayment(request, account);
-           if (!isSuccessfulPayment) return new MakePaymentResult { Success = false };
-           _paymentCalculationService.ProcessDeductions(account, request.Amount);
-           return new MakePaymentResult { Success = true };
+            var account = _accountService.RetrieveAccount(request.DebtorAccountNumber);
+            var isSuccessfulPayment = _paymentSchemeService.IsSuccessfulPayment(request, account);
+            if (!isSuccessfulPayment) return new MakePaymentResult { Success = false };
+            _paymentCalculationService.ProcessDeductions(account, request.Amount);
+            return new MakePaymentResult { Success = true };
         }
     }
 }
