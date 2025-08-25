@@ -6,8 +6,7 @@ public static class LogEventNames
     public const string AccountServiceUpdatingAccount = "AccountService_UpdatingAccount";
     public const string AccountServiceUnableToFindAccount = "AccountService_FailedToFindAccount";
 
-    public const string PaymentSchemeResolverInvalidAccount = "PaymentSchemeResolver_InvalidAccount";
-    public const string PaymentSchemeResolverUnknownScheme = "PaymentSchemeResolver_UnknownScheme";
-
-    public const string PaymentSchemeResolverOutcome = "PaymentSchemeResolver_Outcome";
+    public const string PaymentSchemeServiceInvalidAccount = "PaymentSchemeResolver_InvalidAccount";
+    public const string PaymentSchemeServiceUnknownScheme = "PaymentSchemeResolver_UnknownScheme";
+    public const string PaymentSchemeServiceOutcome = "PaymentSchemeResolver_Outcome";
 }

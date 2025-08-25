@@ -22,10 +22,15 @@ public class AccountService : IAccountService
         
         if (account is not null)
         { 
-            _logger.LogInformation(LogEventNames.AccountServiceSuccess); return account;
+            _logger.LogInformation("{EventName} {AccountNumber}", 
+                LogEventNames.AccountServiceSuccess,
+                accountNumber);
+             return account;
         }
         
-        _logger.LogWarning(LogEventNames.AccountServiceUnableToFindAccount);
+        _logger.LogWarning("{EventName} {AccountNumber}", 
+            LogEventNames.AccountServiceUnableToFindAccount,
+            accountNumber);
         return null;
     }
 

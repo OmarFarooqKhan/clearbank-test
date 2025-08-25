@@ -31,7 +31,7 @@ public class PaymentSchemeService : IPaymentSchemeService
             {
                 _logger.LogWarning(
                     "{EventName} {DebtorAccountNumber}",
-                    LogEventNames.PaymentSchemeResolverInvalidAccount, request.DebtorAccountNumber
+                    LogEventNames.PaymentSchemeServiceInvalidAccount, request.DebtorAccountNumber
                 );
                 return false;
             }
@@ -42,7 +42,7 @@ public class PaymentSchemeService : IPaymentSchemeService
 
             _logger.LogInformation(
                 "{EventName} {@Log}",
-                LogEventNames.PaymentSchemeResolverOutcome,
+                LogEventNames.PaymentSchemeServiceOutcome,
                 log
             );
             return isValidPaymentScheme;
@@ -50,7 +50,7 @@ public class PaymentSchemeService : IPaymentSchemeService
         }
         catch(ArgumentOutOfRangeException ex)
         {
-            _logger.LogError(ex, LogEventNames.PaymentSchemeResolverUnknownScheme);
+            _logger.LogError(ex, LogEventNames.PaymentSchemeServiceUnknownScheme);
         }
 
         return false;

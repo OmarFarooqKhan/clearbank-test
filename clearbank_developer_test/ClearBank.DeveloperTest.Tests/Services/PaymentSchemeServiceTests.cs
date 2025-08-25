@@ -1,8 +1,12 @@
 using AutoFixture.Xunit2;
+using ClearBank.DeveloperTest.Logging;
 using ClearBank.DeveloperTest.Services;
 using ClearBank.DeveloperTest.Services.Interfaces;
 using ClearBank.DeveloperTest.Types;
+using ClearBank.DeveloperTest.Validators.Interfaces;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 using Moq;
 using Xunit;
 
@@ -10,74 +14,70 @@ namespace ClearBank.DeveloperTest.Tests.Services;
 
 public class PaymentSchemeServiceTests
 {
-    private readonly PaymentService _sut;
-    private readonly Mock<IAccountService> _accountServiceMock;
-    private readonly Mock<IPaymentCalculationService> _paymentCalculationServiceMock;
-    private readonly Mock<IPaymentSchemeService> _paymentSchemeServiceMock;
+    private readonly PaymentSchemeService _sut;
+    private readonly Mock<IPaymentSchemeValidatorResolver> _mockResolver;
+    private readonly Mock<IAccountValidator> _mockAccountValidator;
+    private readonly FakeLogger<PaymentSchemeService> _mockLogger;
     
     public PaymentSchemeServiceTests()
     {
-        _accountServiceMock = new();
-        _paymentCalculationServiceMock = new();
-        _paymentSchemeServiceMock = new();
+        _mockResolver = new();
+        _mockAccountValidator = new();
+        _mockLogger = new();
         
-        _sut = new PaymentService(_accountServiceMock.Object, _paymentCalculationServiceMock.Object, _paymentSchemeServiceMock.Object);
+        _sut = new PaymentSchemeService(_mockResolver.Object, _mockAccountValidator.Object, _mockLogger);
     }
 
     [Theory]
     [AutoData]
-    public void Given_MakePaymentIsCalled_When_PaymentSchemeValidates_MakePaymentResultIsSuccessful(MakePaymentRequest request)
+    public void Given_PaymentSchemeService_When_PaymentAndAccountAreValid_Then_IsSuccessfulPaymentReturnsTrue(MakePaymentRequest request, Account account)
     {
-        var accountRetrieved = new Account();
-        _accountServiceMock
-            .Setup(mock => mock.RetrieveAccount(request.DebtorAccountNumber))
-            .Returns(accountRetrieved);
-        _paymentSchemeServiceMock.Setup(mock => mock.IsSuccessfulPayment(request, accountRetrieved))
-            .Returns(true);
-
-       var outcome =  _sut.MakePayment(request);
+        _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(true);
+        var mockValidator = new Mock<IPaymentSchemeValidator>();
+        mockValidator.Setup(mock => mock.IsValidPaymentScheme(request, account)).Returns(true);
+        _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
+            .Returns(mockValidator.Object);
+        
+       var result =  _sut.IsSuccessfulPayment(request, account);
        
-       _paymentCalculationServiceMock.Verify(calls => calls.ProcessDeductions(accountRetrieved, request.Amount), Times.Once);
-       outcome.Success.Should().BeTrue();
+       result.Should().BeTrue();
+       var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, true );
+       _mockLogger.Collector.Count.Should().Be(1);
+       _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Information);
+       _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_Outcome {expectedLogOutcome}");
+    }
+    
+    [Theory]
+    [AutoData]
+    public void Given_PaymentSchemeService_When_AccountIsValidButPaymentSchemeIsNot_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
+    {
+        _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(true);
+        var mockValidator = new Mock<IPaymentSchemeValidator>();
+        mockValidator.Setup(mock => mock.IsValidPaymentScheme(request, account)).Returns(false);
+        _mockResolver.Setup(mock => mock.RetrievePaymentSchemeValidator(request.PaymentScheme))
+            .Returns(mockValidator.Object);
+        
+        var result =  _sut.IsSuccessfulPayment(request, account);
+       
+        result.Should().BeFalse();
+        var expectedLogOutcome = new PaymentSchemeResolverLog(request.PaymentScheme, account.AccountNumber, false );
+        _mockLogger.Collector.Count.Should().Be(1);
+        _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Information);
+        _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_Outcome {expectedLogOutcome}");
     }
 
     [Theory]
     [AutoData]
-    public void Given_MakePaymentIsCalled_When_UnsuccessfulPaymentSchemeValidation_Then_MakePaymentResultUnsuccessful(MakePaymentRequest request)
+    public void Given_PaymentSchemeService_When_AccountIsInvalid_Then_IsSuccessfulPaymentReturnsFalse(MakePaymentRequest request, Account account)
     {
-        var accountRetrieved = new Account();
-        _accountServiceMock
-            .Setup(mock => mock.RetrieveAccount(request.DebtorAccountNumber))
-            .Returns(accountRetrieved);
-        _paymentSchemeServiceMock.Setup(mock => mock.IsSuccessfulPayment(request, accountRetrieved))
-            .Returns(false);
+        _mockAccountValidator.Setup(mock => mock.IsValidAccount(account)).Returns(false);
+        
+        var result =  _sut.IsSuccessfulPayment(request, account);
+        
+        result.Should().BeFalse();
+        _mockLogger.Collector.Count.Should().Be(1);
+        _mockLogger.LatestRecord.Level.Should().Be(LogLevel.Warning);
+        _mockLogger.LatestRecord.Message.Should().Be($"PaymentSchemeResolver_InvalidAccount {request.DebtorAccountNumber}");
 
-        var outcome =  _sut.MakePayment(request);
-        _paymentCalculationServiceMock.VerifyNoOtherCalls();
-        outcome.Success.Should().BeFalse();
-    }
-
-    [Fact]
-    public void Given_MakePaymentIsCalled_WhenBacsPaymentSchemeIsUsed_Then_ReturnsCorrectMakePaymentResult()
-    {
-        
-    }
-    
-    [Fact]
-    public void Given_MakePaymentIsCalled_WhenChapsPaymentSchemeIsUsed_Then_ReturnsCorrectMakePaymentResult()
-    {
-        
-    }
-    
-    [Fact]
-    public void Given_MakePaymentIsCalled_WhenFasterPaymentsPaymentSchemeIsUsed_Then_ReturnsCorrectMakePaymentResult()
-    {
-        
-    }
-    
-    [Fact]
-    public void Given_MakePaymentIsCalled_WhenUsingValidPaymentScheme_Then_DeductAndReturnCorrectMakePaymentResult()
-    {
-        
     }
 }

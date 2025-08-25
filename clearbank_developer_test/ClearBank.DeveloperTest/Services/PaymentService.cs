@@ -1,6 +1,5 @@
 ﻿using ClearBank.DeveloperTest.Services.Interfaces;
 using ClearBank.DeveloperTest.Types;
-using Microsoft.Extensions.Logging;
 
 namespace ClearBank.DeveloperTest.Services
 {
