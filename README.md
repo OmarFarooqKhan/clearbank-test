@@ -70,5 +70,6 @@
 - I would have also liked to add more logging around DB Selection in case app settings do change so we can get confirmation via logging when the switch over happens.
 - For testing I would have liked to get 100% coverage.
 - Would have also like to have used Fluent validation for PaymentSchemeValidators with a log to understand what was a cause of the validation faliure.
+- Would have made the `PaymentSchemeResolver` use DI and update the `IPaymentValidator` to include a property so each scheme has to state what it supports.
 
 Thank you so much for reading through my changes and I hope they give you an understanding of my though process when it comes to problem solving 😊
